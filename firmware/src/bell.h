@@ -48,6 +48,7 @@ typedef struct {
 static sound_t snd;
 static volatile uint8_t glide = 20, volume = 80; /* GLO */
 static volatile int32_t sea_pitch = 48 * 256;   /* the sea's note, in 1/256 semitones */
+static volatile uint8_t bell_light;             /* set when the sound ran short of time: no SPREAD, 2 PRISM overtones */
 
 typedef struct {
     volatile int32_t target, partner;           /* the note and its SPREAD partner (offset), 1/256 semitones */
@@ -112,6 +113,8 @@ static uint32_t isqrt32(uint32_t x)
     }
     return r;
 }
+
+static inline int32_t mul15(int32_t a, int32_t b) { return (int32_t)(((int64_t)a * b) >> 15); }   /* never overflows */
 
 static inline int32_t soft(int32_t x)           /* a soft ceiling near 31000 */
 {
@@ -278,7 +281,7 @@ static void voice_render(uint32_t v, uint32_t frames)
     int32_t tremolo = Q15;
     if (tg == LFO_VOLUME) tremolo = Q15 - (32767 - l) * snd.lfo_depth / 200;
     x->shown = pitch;
-    uint8_t spread = snd.spread != SPREAD_OFF;
+    uint8_t spread = snd.spread != SPREAD_OFF && !bell_light;
     int32_t pitch2 = pitch + x->partner;
     uint32_t t60 = ring_ms[ring];
 
@@ -333,7 +336,7 @@ static void voice_render(uint32_t v, uint32_t frames)
         /* PRISM: the note's first four overtones (fewer the darker), and the SPREAD note */
         uint32_t base = inc_of(pitch);
         static const int32_t falloff[4] = {Q15, 23000, 16000, 11000};
-        for (uint32_t h = 1; h <= 4u; h++) {
+        for (uint32_t h = 1; h <= (bell_light ? 2u : 4u); h++) {
             if (base > 584000000u / h) break;    /* (no filter above 6 kHz) */
             int32_t w = falloff[h - 1];
             for (uint32_t j = 1; j < h; j++) w = w * color / 100;
@@ -384,7 +387,7 @@ static void voice_render(uint32_t v, uint32_t frames)
         in = (int32_t)(((int64_t)in * (x->env >> 9)) >> 15);
         int32_t y;
         if (engine == ENG_RESONATOR) {
-            int32_t fin = in * feed >> 15;
+            int32_t fin = mul15(in, feed);
             int32_t sum = 0;
             for (uint32_t c = 0; c < (spread ? 2u : 1u); c++) {
                 int16_t *ring_buf = buf + c * COMB_LEN;
@@ -402,7 +405,7 @@ static void voice_render(uint32_t v, uint32_t frames)
             y = x->dc_y;
         } else if (engine == ENG_SHIFTER) {
             uint32_t mask = VOICE_BUF - 1u, sh = 16u - wbits;
-            buf[x->w & mask] = (int16_t)soft(in + (x->fb * g[0] >> 15));
+            buf[x->w & mask] = (int16_t)soft(in + mul15(x->fb, g[0]));
             int32_t sum = 0;
             for (uint32_t c = 0; c < (spread ? 2u : 1u); c++) {
                 int32_t pair = 0;
@@ -417,16 +420,16 @@ static void voice_render(uint32_t v, uint32_t frames)
                 x->ph[c] += ph_inc[c];
                 sum += c ? pair * partner_level >> 15 : pair;
             }
-            x->lp[0] += ((sum - x->lp[0]) * k) >> 15;   /* COLOR */
+            x->lp[0] += mul15(sum - x->lp[0], k);  /* COLOR */
             /* a DC blocker, in the loop too: without it the feedback piles up an offset until the bell is pinned
              * at one level, silent (0.1.0, at RING above ~7 s) */
             x->dc_y = x->lp[0] - x->dc_x + (x->dc_y * 32604 >> 15);
             x->dc_x = x->lp[0];
             y = x->dc_y;
-            x->fb = y;
+            x->fb = y > 32767 ? 32767 : y < -32767 ? -32767 : y;
             y = y * 19660 >> 15;                /* as loud as the RESONATOR and the PRISM (measured: -4.4 dB) */
         } else {
-            int32_t fin = in * feed >> 15, sum = 0;
+            int32_t fin = mul15(in, feed), sum = 0;
             for (uint32_t f = 0; f < nf; f++) {
                 int32_t bp = x->svf_bp[f], lp = x->svf_lp[f];
                 lp += (int32_t)(((int64_t)F[f] * bp) >> 15);
@@ -436,7 +439,7 @@ static void voice_render(uint32_t v, uint32_t frames)
                 if (bp < -3000000) bp = -3000000;
                 x->svf_bp[f] = bp;
                 x->svf_lp[f] = lp;
-                sum += bp * wgt[f] >> 15;
+                sum += mul15(bp, wgt[f]);
             }
             y = sum;
         }
@@ -446,7 +449,7 @@ static void voice_render(uint32_t v, uint32_t frames)
         if (m > peak) peak = m;
         y = (int32_t)(((int64_t)y * x->gain) >> 15);
         y = soft(y);
-        out[i] = y * tremolo >> 15;
+        out[i] = mul15(y, tremolo);
     }
     /* the level keeper: what this block would have peaked at, against 16000 */
     int32_t want = peak > 16000 ? (int32_t)(16000u * 32768u / (uint32_t)peak) : Q15;
@@ -489,7 +492,7 @@ static void bell_render(int32_t *out, uint32_t frames)
             r += bell_mix[v][i] * right[v] >> 15;
         }
         int32_t dry = sea_buf[i] * sea >> 15;
-        out[2u * i] += (l * bell >> 15) + dry;
-        out[2u * i + 1u] += (r * bell >> 15) + dry;
+        out[2u * i] += mul15(l, bell) + dry;
+        out[2u * i + 1u] += mul15(r, bell) + dry;
     }
 }

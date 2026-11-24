@@ -37,9 +37,20 @@ static int32_t output_level(int32_t sample)
 
 static void app_audio(int32_t *out, uint32_t frames)
 {
+#ifndef DINGHY_HOST
+    uint32_t t0 = fm1_ticks();
+#endif
     bell_render(out, frames);
     effects_process(out, frames);
     for (uint32_t i = 0; i < 2u * frames; i++) out[i] = output_level(out[i]);
+#ifndef DINGHY_HOST
+    /* A safety net: the sound has 5.8 ms a block. If it ever takes more than 3.8 ms, the bells get lighter (no
+     * SPREAD, fewer PRISM overtones) until it has been calm for 2 s: a little less sound instead of crackles. */
+    static uint16_t calm;
+    uint32_t us = (fm1_ticks() - t0) / FM1_TICKS_PER_US;
+    if (us > 3800u) { bell_light = 1; calm = 0; }
+    else if (bell_light && us < 2500u && ++calm > 350u) bell_light = 0;
+#endif
 }
 
 /* ------------------------------------------------------------------------------------------------ settings */
@@ -281,6 +292,7 @@ static void rec_begin(void)
 
 static void seq_write(uint8_t value)
 {
+    if (seq.len >= SEQ_STEPS) { seq.rec = 0; return; }   /* (never past the end, whatever calls it) */
     seq.steps[seq.len++] = value;
     seq_version++;
     if (seq.len >= SEQ_STEPS) { seq.rec = 0; if (seq.mode != MODE_STEP) { seq.playing = 1; player_restart(PLAYER_SEQ, players[PLAYER_SEQ].next); } }
@@ -533,11 +545,22 @@ static void preset_name(uint8_t p, char *b)
     b[6] = 0;
 }
 
+/* a sound read from flash is checked value by value: a damaged slot can never point past the end of a table */
+static int sound_ok(const sound_t *s)
+{
+    return s->engine < ENGINES && s->wave < WAVES && s->detune <= 50 && s->tone <= 100 && s->push <= 100 &&
+           s->ring <= 100 && s->color <= 100 && s->spread < SPREADS && s->grit <= 100 &&
+           s->attack < ENV_STEPS && s->decay < ENV_STEPS && s->sustain <= 100 && s->release <= RELEASE_FOREVER &&
+           s->lfo_target < LFO_TARGETS && s->lfo_wave < LFO_WAVES && s->lfo_rate < LFO_RATES && s->lfo_depth <= 100 &&
+           s->sea <= 100 && s->bell <= 100 && s->reverb <= 100 && s->echo <= 100;
+}
+
 static void preset_load(uint8_t p)
 {
+    if (p >= FACTORY + USERS) p = 0;
     preset = p;
     snd = p < FACTORY ? factory[p] : store.user[p - FACTORY];
-    if (snd.engine >= ENGINES) snd = factory[0];
+    if (!sound_ok(&snd)) snd = factory[p < FACTORY ? p : p - FACTORY];
     if (p >= FACTORY) last_user = p;
     bells_retune();
 }
@@ -548,6 +571,7 @@ static void presets_init(void)
         store.magic = PRESET_MAGIC;
         for (uint32_t i = 0; i < USERS; i++) store.user[i] = factory[i];
     }
+    for (uint32_t i = 0; i < USERS; i++) if (!sound_ok(&store.user[i])) store.user[i] = factory[i];
 }
 
 /* -------------------------------------------------------------------------------------------- the screen
@@ -1538,12 +1562,12 @@ static void app_main(void)
                 if (page == P_GLO) {
                     scale_now.transpose = (int8_t)((int32_t)k - 7);   /* C4 (the 8th key) = none */
                     bells_retune();
-                } else if (stepping && (k == KEY_REST || k == KEY_TIE)) {
+                } else if ((stepping = seq.rec && seq.mode == MODE_STEP) && (k == KEY_REST || k == KEY_TIE)) {
                     seq_write(k == KEY_REST ? REST : TIE);
                 } else {
                     key_note[k] = (uint8_t)(KEY0 + k);
                     live_press(key_note[k]);
-                    if (stepping) seq_write((uint8_t)(key_step(key_note[k]) + STEP_BIAS));
+                    if (seq.rec && seq.mode == MODE_STEP) seq_write((uint8_t)(key_step(key_note[k]) + STEP_BIAS));
                 }
             }
             if ((up & bit) && key_note[k]) {

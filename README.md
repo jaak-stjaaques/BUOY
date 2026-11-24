@@ -1,7 +1,7 @@
 # BUOY
 
 <p align="center">
-  <img src="docs/screenshots/boot.png" width="320" alt="BUOY boot screen: a bell buoy ringing amber rings over a teal sine-wave sea, version 0.2.0">
+  <img src="docs/screenshots/boot.png" width="320" alt="BUOY boot screen: a bell buoy ringing amber rings over a teal sine-wave sea, version 0.2.1">
   <img src="docs/screenshots/fx.png" width="320" alt="FX page: the pitch strip, the sea's overtones in teal on C3, the resonator's peaks in amber on C4, an arrow from the sea to the note">
 </p>
 <p align="center">
@@ -29,7 +29,7 @@ picks the pitch out of the sea, the envelope decides how much sea reaches it, an
 
 [Read the operator manual](docs/OPERATOR-MANUAL.md) · [Build and test](docs/BUILDING.md) · [Credits and licenses](LICENSING.md)
 
-**Version 0.2.0** builds as `buoy_0.2.0.fwsc`. The host tests pass. It has **not yet been installed on a physical
+**Version 0.2.1** builds as `buoy_0.2.1.fwsc`. The host tests pass. It has **not yet been installed on a physical
 FM‑1**.
 
 ## Credits
