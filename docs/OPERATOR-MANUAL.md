@@ -20,20 +20,20 @@ underlined: teal for the sea, amber for the bell.
 
 | Control | What it does |
 | --- | --- |
-| **HOME** | The harbour: the three bells over the sea, their rings as loud as they are. The mix on the knobs |
+| **HOME** | The harbour: the three bells over the sea, their rings as loud as they are (a held bell is teal, underlined). The mix on the knobs |
 | **EDIT** | The sea |
 | **FX** | The bells' effect: RING, COLOR, SPREAD, GRIT |
 | **ENV** | The envelope of the bells |
 | **LFO** | The LFO, on the three bells a third of a cycle apart |
 | **ARP** | The arpeggiator. Press it again on its page: on or off |
-| **SEQ** | Three tracks, one for each bell |
+| **SEQ** | One track of 32 steps |
 | **GLO** | The scale, the tempo, the glide, the volume. Here the keys transpose everything |
-| **SEL** | **FREEZE**: every bell sounding now holds as it is. The keys and the ARP play the bells still free. Again: let them go |
+| **SEL** | **HOLD** the selected bell as it sounds now, or let it go. Any bell, in any combination: choose it with SELECT, press SEL. The keys, the ARP and the SEQ play the bells still free. **Hold SEL**: let every bell go |
 | **SAVE** | Saves the sound in a USER preset (the one you are on, or the last USER one) |
-| **PLAY/STOP** | Starts and stops the ARP and the SEQ. **Hold it**: every bell lets go, frozen ones too |
-| **REC** | Records what the ARP plays into the selected track. Again: stop. **Hold it**: clear the track |
+| **PLAY/STOP** | Starts and stops the SEQ. **Hold it**: the SEQ stops and every bell lets go, held ones too |
+| **REC** | Records the SEQ (in its MODE). Again: stop. **Hold it**: clear the SEQ |
 | **OCT− / OCT+** | The keys' and the ARP's octave. On GLO: the whole instrument, an octave |
-| **SELECT** | Chooses the bell (1 to 3) the keys and the ARP play. On GLO: the scale |
+| **SELECT** | Chooses the bell (1 to 3) the keys and the ARP play, and the one SEL holds. On SEQ: the SEQ's bell. On GLO: the scale |
 | **ALGORITHM** | The bells' effect: RESONATOR, SHIFTER, PRISM (any page) |
 | **PRESETS** | The sound: 8 presets, then USER 1 to 8 (any page) |
 
@@ -69,19 +69,28 @@ fed. With FOREVER, a key retunes a bell that keeps ringing. Hold PLAY/STOP to le
 (random, smoothly) · 3 **RATE**: 0.01 to 20 Hz · 4 **DEPTH**. The dots under the wave are the three bells.
 
 ### ARP
+A normal arpeggiator: turn it on (ARP, then ARP again), **hold keys** and it plays them, low to high, over RANGE
+octaves; let go and it stops. It needs no PLAY.
 1 **RATE**: 1 bar to 1/32 · 2 **PATTERN**: up, down, bounce, random, walk · 3 **RANGE**: 1 to 4 octaves ·
-4 **CHANCE** that a step plays. The white keys light the scale steps it may use (none lit: the whole scale).
-It plays the selected bell. It runs while PLAY is on.
+4 **CHANCE** that a step plays. It plays the selected bell (or the next one not held).
 
 ### SEQ
-REC records what the ARP plays into the selected track (up to 16 steps); REC again, or 16 steps, ends it and turns
-the ARP off so you hear the tracks. Track 1 plays bell 1, track 2 bell 2, track 3 bell 3.
-Knobs 1 to 3: each track's **LENGTH** (shorter, then longer again: the notes come back) · 4 **CHANCE** that a
-recorded note plays. White keys 1 to 3 mute the tracks, 4 to 6 select them.
+One track of up to **32 steps**: notes, **RESTs** (silence) and **TIEs** (the note before goes on). It plays its own
+bell: **bell 3** at the start; SELECT on this page changes it. Nothing is saved.
+
+1 **MODE**, how REC records:
+- **LIVE**: what you play (the keys, or the ARP), on the RATE grid. It starts with your first note; a key held over
+  several steps becomes TIEs, a silence RESTs. REC again: stop. It plays straight away.
+- **STEP**: one key, one step. **F#3** (the first black key) is a REST, **G#3** (the second) a TIE. REC again: stop.
+  Then PLAY.
+- **ARP**: what the ARP plays, step for step (its silences too), from its first note. REC turns the ARP on.
+
+2 **LENGTH**: 1 to 32 (longer: silent steps are added; shorter, then longer again: the notes come back) ·
+3 **RATE** · 4 **CHANCE** that a note plays. **PLAY/STOP** starts and stops it. **Hold REC**: clear it.
 
 ### GLO
 1 **SCALE** (or SELECT) · 2 **TEMPO** · 3 **GLIDE**: the bells slide to a new note, up to 8 s · 4 **VOLUME**.
-The keys transpose everything: the sea, the tracks, the held and frozen bells. C4 (the eighth key) is C.
+The keys transpose everything: the sea, the SEQ, the bells (held ones too). C4 (the eighth key) is C.
 
 ## The scales
 

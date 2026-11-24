@@ -1,48 +1,62 @@
 # The screenshots of docs/screenshots: tests/run_host.sh tests/scripts/shots.txt (BUOY)
-# boot 800, home 4600, fx 5200, edit 5600, env 6200, lfo 6800, arp 8800, seq 12000, glo 12800
+# boot 800, home 4600, fx 5200, edit 5600, env 6200, lfo 6800, arp 8600, seq 11000, glo 11800
 800 shot
-1700 btn 4
-1800 enc 5 12
-1900 btn 8
 2000 keys 0x80
-2300 keys 0
-2400 enc 0 1
-2500 keys 0x800
-2800 keys 0
-2900 enc 0 1
-3000 keys 0x4000
-3300 keys 0
-3400 enc 0 -2
+2400 btn 3
+2500 keys 0
+2600 enc 0 1
+2700 keys 0x4000
+3100 btn 3
+3200 keys 0
+3300 enc 0 1
+3400 keys 0x800
 4600 shot
 4700 btn 2
 4800 enc 4 2
 5200 shot
-5300 btn 6
+5300 keys 0
+5400 btn 6
 5600 shot
 5700 btn 4
-5800 enc 5 -4
 6200 shot
 6300 btn 5
 6400 enc 5 15
 6800 shot
-7000 btn 10
-7100 keys 0x1
-7150 keys 0
-7200 keys 0x10
-7250 keys 0
-7300 keys 0x80
-7350 keys 0
-7400 keys 0x400
-7450 keys 0
-7500 btn 12
-8800 shot
-8900 btn 11
+6900 btndown 3
+7700 btnup 3
+7800 enc 0 -2
+7900 btn 10
+8000 btn 10
+8100 enc 3 1
+8200 keys 0x891
+8600 shot
+8700 keys 0
+8800 btn 11
+8900 enc 2 1
 9000 btn 13
-10400 btn 13
-10500 enc 0 1
-10600 btn 13
-11600 btn 13
-12000 shot
-12100 btn 7
-12800 shot
-13200 end
+9100 keys 0x80
+9150 keys 0
+9200 keys 0x800
+9250 keys 0
+9300 keys 0x8
+9350 keys 0
+9400 keys 0x4000
+9450 keys 0
+9500 keys 0x2
+9550 keys 0
+9600 keys 0x1000
+9650 keys 0
+9700 keys 0x800
+9750 keys 0
+9800 keys 0x8
+9850 keys 0
+9900 keys 0x80
+9950 keys 0
+10000 keys 0x2
+10050 keys 0
+10100 btn 13
+10200 btn 12
+11000 shot
+11100 btn 7
+11800 shot
+12200 end

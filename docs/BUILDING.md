@@ -1,6 +1,6 @@
 # Build and test BUOY
 
-The FM‑1 package for version 0.1.0 is `build/buoy_0.1.0.fwsc`. The device's
+The FM‑1 package for version 0.2.0 is `build/buoy_0.2.0.fwsc`. The device's
 installer identifies BUOY as `FM-1_417305`.
 
 ## Build on a computer
@@ -27,11 +27,11 @@ inherited low-level interfaces.
 
 The offline suite exercises the synth, loops, updater, and package checks. An
 actual USB install and power-cycle test on a physical FM‑1 remain to be
-verified for BUOY 0.1.0.
+verified for BUOY 0.2.0.
 
 Before installing, make a full recovery backup of your FM‑1 and verify that
 your recovery tool can open it. In **M‑Flasher**, choose **Install firmware
-(.fwsc)** and select `buoy_0.1.0.fwsc`. Leave the bootloader option unchecked
+(.fwsc)** and select `buoy_0.2.0.fwsc`. Leave the bootloader option unchecked
 and review the detected model and planned changes before confirming.
 [M‑Flasher installation guide](https://github.com/jvitkauskas/m-flasher/blob/main/docs/usage.md#the-actions)
 
@@ -41,7 +41,7 @@ with a data cable. The installer asks before it writes.
 
 ```sh
 python3 tools/fm1_install.py --info
-python3 tools/fm1_install.py build/buoy_0.1.0.fwsc
+python3 tools/fm1_install.py build/buoy_0.2.0.fwsc
 ```
 
 If the installed firmware fails to start, hold **OCT−** during power-on to

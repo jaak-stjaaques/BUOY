@@ -144,13 +144,13 @@ static void bell_release(uint32_t v)
     if (!voices[v].frozen) voices[v].gate = 0;
 }
 
-static void bell_freeze(uint8_t on)             /* SEL: every bell that sounds now is held as it is */
+static int bell_hold(uint32_t v, uint8_t on)    /* SEL: hold one bell as it sounds now (or let it go) */
 {
-    for (uint32_t v = 0; v < VOICES; v++) {
-        voice_t *x = &voices[v];
-        if (on) x->frozen = x->awake && (x->gate || x->env > (1 << 18));
-        else { x->frozen = 0; }
-    }
+    voice_t *x = &voices[v];
+    if (!on) { x->frozen = 0; return 1; }
+    if (!x->awake || (!x->gate && x->env < (1 << 18))) return 0;   /* (nothing to hold) */
+    x->frozen = 1;
+    return 1;
 }
 
 static void bell_silence(void)                  /* PLAY/STOP while stopped: let every bell go */
@@ -318,6 +318,8 @@ static void voice_render(uint32_t v, uint32_t frames)
             if (g[c] > 32760) g[c] = 32760;
         }
         feed = (int32_t)isqrt32((uint32_t)(Q15 - g[0]) << 15);
+        /* a long ring narrows the comb and it gets quieter: lift it back (measured: up to +8 dB at RING 100) */
+        if (ring > 40) feed = feed * (2400 + (ring - 40) * (ring - 40)) / 2400;
     } else if (engine == ENG_SHIFTER) {
         wbits = (uint8_t)(11 - grit / 34);      /* GRIT: shorter grains, rougher */
         for (uint32_t c = 0; c < 2u; c++) {
@@ -326,7 +328,7 @@ static void voice_render(uint32_t v, uint32_t frames)
             uint32_t a = (uint32_t)(r < 0 ? -r : r);
             ph_inc[c] = a << (16u - wbits);
         }
-        g[0] = ring * 280;                      /* RING: feedback, 0 .. 0.85: the shimmer stacks the interval */
+        g[0] = ring * 250;                      /* RING: feedback, 0 .. 0.76: the shimmer stacks the interval */
     } else {
         /* PRISM: the note's first four overtones (fewer the darker), and the SPREAD note */
         uint32_t base = inc_of(pitch);
@@ -416,8 +418,13 @@ static void voice_render(uint32_t v, uint32_t frames)
                 sum += c ? pair * partner_level >> 15 : pair;
             }
             x->lp[0] += ((sum - x->lp[0]) * k) >> 15;   /* COLOR */
-            y = x->lp[0];
+            /* a DC blocker, in the loop too: without it the feedback piles up an offset until the bell is pinned
+             * at one level, silent (0.1.0, at RING above ~7 s) */
+            x->dc_y = x->lp[0] - x->dc_x + (x->dc_y * 32604 >> 15);
+            x->dc_x = x->lp[0];
+            y = x->dc_y;
             x->fb = y;
+            y = y * 19660 >> 15;                /* as loud as the RESONATOR and the PRISM (measured: -4.4 dB) */
         } else {
             int32_t fin = in * feed >> 15, sum = 0;
             for (uint32_t f = 0; f < nf; f++) {
@@ -473,7 +480,7 @@ static void bell_render(int32_t *out, uint32_t frames)
     lfo_advance(frames);
     /* bells 1 left, 2 in the middle, 3 right; the dry sea in the middle */
     static const int16_t left[VOICES] = {32767, 26000, 15000}, right[VOICES] = {15000, 26000, 32767};
-    int32_t bell = snd.bell * 328, sea = snd.sea * 200;
+    int32_t bell = snd.bell * 200, sea = snd.sea * 200;   /* (headroom for three bells at once) */
     for (uint32_t i = 0; i < frames; i++) {
         int32_t l = 0, r = 0;
         for (uint32_t v = 0; v < VOICES; v++) {

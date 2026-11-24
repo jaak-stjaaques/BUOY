@@ -1,44 +1,68 @@
-# BUOY tour: boot, a drone, every page, the ARP, a recording, freeze, the three bell effects, a preset, SAVE
+# BUOY tour: a drone held on bell 1 (SEL), the ARP on bell 2, the SEQ: LIVE, STEP (rests, ties), ARP; every page
 800 shot
 2000 keys 0x80
+2400 btn 3
+2500 keys 0
+2600 enc 0 1
 3000 shot
-3100 btn 2
-3500 shot
-3600 keys 0
-3700 keys 0x800
-4200 shot
-4300 keys 0
-4400 btn 6
-4600 shot
-4700 btn 4
-4900 shot
-5000 btn 5
-5100 enc 5 10
-5300 shot
-5400 btn 10
-5500 btn 12
-7000 shot
-7100 btn 11
-7200 btn 13
-9500 btn 13
-9700 shot
-9800 btn 7
-9900 keys 0x4
-9950 keys 0
-10100 shot
-10200 btn 3
-10300 btn 8
-10600 shot
-10700 enc 1 1
-10800 btn 2
-10900 keys 0x1000
-11500 shot
-11600 keys 0
-11700 enc 1 1
-11800 keys 0x80
-12500 shot
-12600 keys 0
-12700 enc 6 2
-13000 btn 9
-13200 shot
-14000 end
+3100 btn 10
+3200 btn 10
+3300 keys 0x891
+4800 shot
+4900 keys 0
+5000 btn 11
+5100 btn 13
+5300 keys 0x80
+5600 keys 0
+5800 keys 0x800
+6300 keys 0
+6500 keys 0x4000
+6900 keys 0
+7000 btn 13
+7400 shot
+7500 enc 2 1
+7600 btn 13
+7700 keys 0x80
+7750 keys 0
+7800 keys 0x2
+7850 keys 0
+7900 keys 0x800
+7950 keys 0
+8000 keys 0x8
+8050 keys 0
+8100 keys 0x4000
+8150 keys 0
+8200 btn 13
+8400 shot
+8500 btn 12
+9800 shot
+9900 btn 12
+10000 enc 2 1
+10100 btn 13
+10200 keys 0x891
+11800 keys 0
+12500 btn 13
+12700 shot
+12800 btn 8
+13000 shot
+13100 btndown 3
+14000 btnup 3
+14200 shot
+14300 btn 2
+14400 enc 1 1
+14500 keys 0x1000
+15000 shot
+15100 keys 0
+15200 btn 6
+15300 shot
+15400 btn 4
+15500 shot
+15600 btn 5
+15700 shot
+15800 btn 7
+15900 keys 0x4
+15950 keys 0
+16100 shot
+16200 btn 9
+16400 shot
+17000 end

@@ -1,11 +1,11 @@
 # BUOY
 
 <p align="center">
-  <img src="docs/screenshots/boot.png" width="320" alt="BUOY boot screen: a bell buoy ringing amber rings over a teal sine-wave sea, version 0.1.0">
+  <img src="docs/screenshots/boot.png" width="320" alt="BUOY boot screen: a bell buoy ringing amber rings over a teal sine-wave sea, version 0.2.0">
   <img src="docs/screenshots/fx.png" width="320" alt="FX page: the pitch strip, the sea's overtones in teal on C3, the resonator's peaks in amber on C4, an arrow from the sea to the note">
 </p>
 <p align="center">
-  <img src="docs/screenshots/home.png" width="320" alt="HOME page: three bells ringing over the sea, C4, G4, G4, and the mix: sea, bells, reverb, echo">
+  <img src="docs/screenshots/home.png" width="320" alt="HOME page: three bells over the sea, bells 1 and 2 held, and the mix: sea, bells, reverb, echo">
   <img src="docs/screenshots/edit.png" width="320" alt="EDIT page: the sea's saw wave, detuned 7 cents">
 </p>
 
@@ -20,7 +20,8 @@ picks the pitch out of the sea, the envelope decides how much sea reaches it, an
 
 - **The sea (EDIT)**: sine, triangle, saw, square, glass, reed, voice, organ or noise; a second oscillator to detune; tone and push.
 - **Three bells, three effects (ALGORITHM)**: **RESONATOR** (a tuned delay that rings at the note), **SHIFTER** (grains of the sea, played faster or slower: the sea moved to the note; feedback stacks the interval into a shimmer) and **PRISM** (narrow filters on the note and its overtones). The same four knobs for all three: RING, COLOR, SPREAD, GRIT.
-- **ENV, LFO, ARP, SEQ and the scale all play the bells**, never the oscillator. RELEASE goes to FOREVER, and **SEL freezes** every bell that sounds while you play over it.
+- **ENV, LFO, ARP, SEQ and the scale all play the bells**, never the oscillator. RELEASE goes to FOREVER, and **SEL holds** any of the three bells, in any combination, while you play over them.
+- **A normal ARP** (hold keys and it plays them) and **one 32-step SEQ** with rests and ties, recorded LIVE, STEP by step, or from the ARP. Nothing is saved.
 - **The scale comes last**: 48 scales, common and exotic, and some only the bells can play: slendro, just major, the harmonic series. On the GLO page the keys transpose everything, held drones and the sea too.
 - **The signal path is on every screen**: `SEA C3 ~> BELL 1 G4 -> SPACE`. The sea's note never moves; the bell's does.
 - **8 presets and 8 USER slots** that SAVE keeps. Reverb and echo. MIDI in and out (bells 1 to 3 on channels 1 to 3) with clock.
@@ -28,7 +29,7 @@ picks the pitch out of the sea, the envelope decides how much sea reaches it, an
 
 [Read the operator manual](docs/OPERATOR-MANUAL.md) · [Build and test](docs/BUILDING.md) · [Credits and licenses](LICENSING.md)
 
-**Version 0.1.0** builds as `buoy_0.1.0.fwsc`. The host tests pass. It has **not yet been installed on a physical
+**Version 0.2.0** builds as `buoy_0.2.0.fwsc`. The host tests pass. It has **not yet been installed on a physical
 FM‑1**.
 
 ## Credits
