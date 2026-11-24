@@ -202,7 +202,7 @@ static int32_t sea_buf[HALF_FRAMES];
 static void sea_render(uint32_t frames)
 {
     uint32_t inc = inc_of(sea_pitch);
-    uint32_t inc2 = inc + (uint32_t)((uint64_t)inc * snd.detune * 3786u / 6553600u);   /* + cents */
+    uint32_t inc2 = inc + (inc >> 16) * (snd.detune * 3786u / 100u);   /* + cents (2^(c/1200) - 1 ~ c x 37.86 / 65536) */
     int32_t k = 1500 + snd.tone * 312;          /* the tone: a gentle low-pass, open at 100 */
     uint8_t wave = snd.wave, two = snd.detune != 0;
     const int16_t *t = sea_tables[wave < SEA_TABLES ? wave : 0];
@@ -276,7 +276,7 @@ static void voice_render(uint32_t v, uint32_t frames)
     int32_t grit = clamp100(snd.grit + (tg == LFO_GRIT ? mod50 : 0));
     int32_t push = clamp100(snd.push + (tg == LFO_PUSH ? mod50 : 0));
     int32_t tremolo = Q15;
-    if (tg == LFO_VOLUME) tremolo = Q15 - (int32_t)((int64_t)(32767 - l) * snd.lfo_depth / 200);
+    if (tg == LFO_VOLUME) tremolo = Q15 - (32767 - l) * snd.lfo_depth / 200;
     x->shown = pitch;
     uint8_t spread = snd.spread != SPREAD_OFF;
     int32_t pitch2 = pitch + x->partner;
@@ -425,8 +425,8 @@ static void voice_render(uint32_t v, uint32_t frames)
                 lp += (int32_t)(((int64_t)F[f] * bp) >> 15);
                 int32_t hp = fin - lp - (int32_t)(((int64_t)q * bp) >> 15);
                 bp += (int32_t)(((int64_t)F[f] * hp) >> 15);
-                if (bp > 4000000) bp = 4000000;
-                if (bp < -4000000) bp = -4000000;
+                if (bp > 3000000) bp = 3000000;   /* (not 4000000: -4000000 looks like a ROM address to the build check) */
+                if (bp < -3000000) bp = -3000000;
                 x->svf_bp[f] = bp;
                 x->svf_lp[f] = lp;
                 sum += bp * wgt[f] >> 15;
