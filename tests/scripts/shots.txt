@@ -1,0 +1,48 @@
+# The screenshots of docs/screenshots: tests/run_host.sh tests/scripts/shots.txt (BUOY)
+# boot 800, home 4600, fx 5200, edit 5600, env 6200, lfo 6800, arp 8800, seq 12000, glo 12800
+800 shot
+1700 btn 4
+1800 enc 5 12
+1900 btn 8
+2000 keys 0x80
+2300 keys 0
+2400 enc 0 1
+2500 keys 0x800
+2800 keys 0
+2900 enc 0 1
+3000 keys 0x4000
+3300 keys 0
+3400 enc 0 -2
+4600 shot
+4700 btn 2
+4800 enc 4 2
+5200 shot
+5300 btn 6
+5600 shot
+5700 btn 4
+5800 enc 5 -4
+6200 shot
+6300 btn 5
+6400 enc 5 15
+6800 shot
+7000 btn 10
+7100 keys 0x1
+7150 keys 0
+7200 keys 0x10
+7250 keys 0
+7300 keys 0x80
+7350 keys 0
+7400 keys 0x400
+7450 keys 0
+7500 btn 12
+8800 shot
+8900 btn 11
+9000 btn 13
+10400 btn 13
+10500 enc 0 1
+10600 btn 13
+11600 btn 13
+12000 shot
+12100 btn 7
+12800 shot
+13200 end

@@ -1,0 +1,11 @@
+{
+  "what": "A drone and exploration synth where the effects are the synth: a sea that never stops runs through three bells (resonator, pitch shifter, filter prism) that the keys, the ARP, three SEQ tracks and 48 scales retune. Freeze, release forever, presets.",
+  "kinds": [
+    "synth"
+  ],
+  "play": "https://joakimeriksson.github.io/fm1-emu/",
+  "cheat": "https://github.com/jaak-stjaaques/BUOY/blob/main/docs/OPERATOR-MANUAL.md",
+  "image": "docs/screenshots/fx.png",
+  "color": "#EF9F27",
+  "sounds": "presets"
+}
