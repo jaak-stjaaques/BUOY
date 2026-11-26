@@ -34,6 +34,8 @@ FM‑1**.
 
 ## Credits
 
+BUOY is designed by [jaak-stjaaques](https://github.com/jaak-stjaaques) and written with Claude.
+
 BUOY builds on [Dinghy](https://github.com/zvenson/dinghy) by zvenson and the
 [Felucca](https://github.com/hugelton/Felucca) and [SLOOP](https://github.com/isod89/sloop-fm1)
 platform work it carries, and on the delay, hall and page design of
